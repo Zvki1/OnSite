@@ -12,32 +12,34 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false)
   const [name, setName] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
-  const [tasks, setTasks] = useState(
-    [ {
-      id: 1,
-      title: "Event 1",
-      start: "2024-04-26",
-      end: "2024-04-26",
-      description:
-        "Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.\n\nPraesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.",
-      color: "#C97D60",
-    },
-    {
-      id: 2,
-      title: "Event 2",
-      start: "2023-05-15T13:30:02",
-      end: "2023-05-15T17:30:20",
-      description:
-        "Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.\n\nIn hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.\n\nAliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.",
-      color: "green",
-    }]
-  )
+  const [tasks, setTasks] = useState([])
+  const [projectId, setProjectId] = useState(1)
   const handleClick = () => {
     setShowModal(true)
     console.log("am clicked");
   }
   useEffect(() => {
-    axios.get('http://192.168.81.208:8000/api/user', {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pId = urlParams.get("project");
+    console.log("project id",pId);
+    setProjectId(pId)
+    
+    // getting tasks acording to the project id
+    axios.get(`http://192.168.43.40:8000/api/projects/${projectId}/tasks`,
+    {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    })
+    .then((res)=>{
+      console.log("tasks",res.data.data);
+      setTasks(res.data.data)
+     
+      
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    
+    axios.get('http://192.168.43.40:8000/api/user', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
@@ -48,12 +50,13 @@ const Home = () => {
       res => {
         setName(res.data.name)
         setIsAdmin(res.data.role)
-        console.log(res.data);
+        console.log("user data",res.data);
         localStorage.setItem("user", JSON.stringify(res.data))
         
       }
     )
     .catch(err => console.log(err))
+
   }, [])
   return (
     <div className="flex w-screen h-screen">
@@ -73,7 +76,7 @@ const Home = () => {
            </div>
        </div>
        <Calendrier tasks={tasks} />
-       <Tasks  />
+       <Tasks tasks={tasks} />
         {showModal &&  <PopUp showModal={showModal} setShowModal={setShowModal}/>}
    </div>
     ) : (

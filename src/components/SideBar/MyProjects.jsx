@@ -6,7 +6,7 @@ import axios from "axios";
 const MyProjects = ({setShowModal}) => {
   const [projects, setProjects] = useState([])
   useEffect(() => {
-    axios.get('http://192.168.81.208:8000/api/projects', {
+    axios.get('http://192.168.43.40:8000/api/projects', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
@@ -16,7 +16,6 @@ const MyProjects = ({setShowModal}) => {
     .then(
       res => {
         setProjects(res.data)
-        console.log(res.data,"res.data");
       }
     )
     .catch(err => console.log(err))

@@ -30,7 +30,7 @@ const Login = () => {
       // console.log('login successful');
       axios
         .post(
-          "http://192.168.81.208:8000/api/login",
+          "http://192.168.43.40:8000/api/login",
           { email, password },
           
         )
