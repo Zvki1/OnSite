@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PopUp = ({ showModal, setShowModal }) => {
   const [name, setName] = useState("");
@@ -37,6 +38,7 @@ const PopUp = ({ showModal, setShowModal }) => {
   const handleClick = () => {
     setShowModal(false);
   };
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submitted");
@@ -48,7 +50,7 @@ const PopUp = ({ showModal, setShowModal }) => {
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get("project");
         console.log(name, location, user_name, deadline, priority, validation_type, color,projectId);
-        axios.post('http://192.168.81.208:8000/api/tasks', {
+        axios.post('http://192.168.43.40:8000/api/tasks', {
             name: name,
             location: location,
             user_name: user_name,
@@ -64,7 +66,12 @@ const PopUp = ({ showModal, setShowModal }) => {
                 'Accept': 'application/json',
             }
             })
-            .then( res => {console.log(res);})
+            .then( res => 
+              {console.log(res);
+              alert("task added successfully");
+              window.location.reload();
+
+              })
             .catch(err => console.log(err))
     }
     // send the data to the backend

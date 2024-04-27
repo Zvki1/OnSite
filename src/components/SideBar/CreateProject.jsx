@@ -9,7 +9,7 @@ const CreateProject = ({setShowModal}) => {
     }
     const handleSubmit = (e) => {
     e.preventDefault()
-    axios.post('http://192.168.81.208:8000/api/projects', {
+    axios.post('http://192.168.43.40:8000/api/projects', {
     name: name
     }, {
     headers: {

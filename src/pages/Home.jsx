@@ -13,11 +13,12 @@ const Home = () => {
   const [name, setName] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
   const [tasks, setTasks] = useState([])
-  const [projectId, setProjectId] = useState(1)
+  const [projectId, setProjectId] = useState()
   const handleClick = () => {
     setShowModal(true)
     console.log("am clicked");
   }
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const pId = urlParams.get("project");
@@ -57,7 +58,8 @@ const Home = () => {
     )
     .catch(err => console.log(err))
 
-  }, [])
+  }, [projectId])
+
   return (
     <div className="flex w-screen h-screen">
       <SideBar />
