@@ -2,8 +2,9 @@ import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { MOCK_EVENTS } from "../event";
-const Calendrier = () => {
+const Calendrier = ({tasks}) => {
   const localizer = momentLocalizer(moment);
+  // replace this with the tasks from the server
   const events = MOCK_EVENTS.map((event) => ({
     title: event.title,
     start: new Date(event.start),
