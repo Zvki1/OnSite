@@ -4,6 +4,19 @@ import { useEffect, useState } from "react";
 import Loading from "../Loading";
 
 const Tasks = ({tasks}) => {
+  const [sortedTasks, setSortedTasks] = useState([]);
+  const sortByDate = (a, b) => {
+    
+    const dateA = new Date(a.deadline);
+    const dateB = new Date(b.deadline);
+    
+    return -(dateA - dateB);
+  };
+  
+  useEffect(() => {
+    const temp= tasks.sort(sortByDate);
+    setSortedTasks(temp);
+  }, [tasks]);
   return (
     <div className="overflow-x-auto scroller h-2/6">
       <table className="table ">
@@ -18,8 +31,8 @@ const Tasks = ({tasks}) => {
           </tr>
         </thead>
         <tbody>
-          {tasks ? (
-            tasks.map((task) => (
+          {sortedTasks ? (
+            sortedTasks.map((task) => (
               <tr key={task.id}>
               <th>{task.id}</th>
               <td className="flex flex-col ">
@@ -54,6 +67,13 @@ const Tasks = ({tasks}) => {
             <Loading />
           )
         }
+        {tasks.length === 0 && (
+          <tr>
+            <td colSpan="5" className="text-center">
+              No tasks available check other projects
+            </td>
+          </tr>
+        )}
         
           
         </tbody>

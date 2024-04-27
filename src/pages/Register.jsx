@@ -14,11 +14,15 @@ import { SquareAsterisk } from 'lucide-react';
 const Register = () => {
   // const [users, setUsers] = useState([]);
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [name, setname] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
+  const handleSelectRole = (e) => {
+    setRole(e.target.value);
+    console.log(e.target.value);
+  }
 
   const validateForm = () => {
     const errors = {};
@@ -29,10 +33,10 @@ const Register = () => {
       errors.email = "Invalid email format";
     }
 
-    if (!username.trim()) {
-      errors.username = "Username is required";
-    } else if (username.length < 6) {
-      errors.username = "username must be at least 6 characters long";
+    if (!name.trim()) {
+      errors.name = "name is required";
+    } else if (name.length < 6) {
+      errors.name = "name must be at least 6 characters long";
     }
 
     if (!password.trim()) {
@@ -55,12 +59,20 @@ const Register = () => {
     const handleSubmit = (event) => {
       event.preventDefault();
      if (validateForm()) {
-    
-      axios.post('http://localhost:8000/register', { email, username, password })
+      console.log(email, name, password,role);
+      axios.post('http://192.168.43.40:8000/api/register', { email, name, password ,role},
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+
+        }})
+
       .then(() => {
           alert('Registration Successful')
           setEmail('')
-          setUsername('')
+          setname('')
           setPassword('')
         //   fetchUsers();
           navigate('/login')
@@ -104,8 +116,9 @@ const Register = () => {
             onChange={(e)=>{setEmail(e.target.value)}}
           />
         </div>
-        {/* username */}
-        {errors.username && <p className="text-red-500 pt-1 -mb-[17px]">{errors.username}</p>}
+        {/* name */}
+        <div>
+        {errors.name && <p className="text-red-500 pt-1 -mb-[17px]">{errors.name}</p>}
         <div className="relative">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
           <User size={20} strokeWidth={3}  color="#6b7280"/>
@@ -115,9 +128,20 @@ const Register = () => {
             id="email-address-icon"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-lg font-medium rounded-lg  block w-full ps-10 p-4     "
             placeholder="Full name"
-            value={username}
-            onChange={(e)=>{setUsername(e.target.value)}}
+            value={name}
+            onChange={(e)=>{setname(e.target.value)}}
           />
+        </div>
+        <select 
+        value={role} onChange={handleSelectRole}
+                    id="category"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  >
+                    <option selected="">Select role</option>
+                    <option value="admin">admin</option>
+                    <option value="manager">manager</option>
+                    <option value="employee">employee</option>
+                  </select>
         </div>
         {/* password */}
         {errors.password && <p className="text-red-500 pt-1 -mb-[17px]">{errors.password}</p>}
